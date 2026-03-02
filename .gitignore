@@ -1,0 +1,15 @@
+#Autenticacao
+auth/
+
+#Processamento de Cadastro
+api/
+
+#Editar Tabelas
+edit_tables/
+
+#Deletar Tabelas
+delete_tables/
+
+#Banco de Dados
+config/conexao.php
+database.sql

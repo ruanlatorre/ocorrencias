@@ -10,19 +10,54 @@
     position: fixed;
     left: 0;
     top: 0;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+}
+
+.sidebar.collapsed {
+    width: 80px;
 }
 
 .sidebar-header {
     padding: 24px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+.btn-toggle-sidebar {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.btn-toggle-sidebar:hover {
+    background: var(--hover-bg);
+    color: var(--text-primary);
+}
+
+.sidebar.collapsed .sidebar-logo {
+    display: none;
+}
+
+.sidebar.collapsed .sidebar-header {
+    justify-content: center;
+    padding: 24px 0;
 }
 
 .sidebar-logo {
     font-size: 32px;
     font-weight: 900;
     font-style: italic;
-    color: #ffffff;
+    color: var(--accent-red);
     letter-spacing: 2px;
 }
 
@@ -51,8 +86,9 @@
 }
 
 .menu-item.active {
-    background-color: #31333c;
+    background-color: var(--hover-bg);
     color: var(--text-primary);
+    border-left: 3px solid var(--accent-red);
 }
 
 .menu-item i,
@@ -90,8 +126,8 @@
     align-items: center;
     width: 100%;
     padding: 12px 16px;
-    background-color: #1a1b20;
-    border: none;
+    background-color: var(--hover-bg);
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     color: var(--text-primary);
     cursor: pointer;
@@ -104,6 +140,16 @@
     padding: 32px;
     background-color: var(--bg-color);
     min-height: 100vh;
+    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar.collapsed+.main-content {
+    margin-left: 80px;
+}
+
+/* Fallback for pages where main-content is not immediate sibling */
+body.sidebar-collapsed .main-content {
+    margin-left: 80px;
 }
 
 /* Extra Utility for Sidebar Link */
@@ -116,4 +162,60 @@
 .menu-item.special:hover {
     border-style: solid;
     border-color: var(--accent-red);
+}
+
+.sidebar-menu::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar-menu::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar-menu::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.sidebar-menu::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Fix para itens com muitos caracteres */
+.menu-item span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 500;
+}
+
+.sidebar.collapsed .menu-item {
+    justify-content: center;
+    padding: 12px 0;
+}
+
+.sidebar.collapsed .menu-item svg,
+.sidebar.collapsed .menu-item i {
+    margin-right: 0;
+}
+
+.sidebar.collapsed .menu-item span,
+.sidebar.collapsed .btn-logout span,
+/* assuming logout might have span later */
+.sidebar.collapsed .btn-logout text {
+    display: none;
+}
+
+.sidebar.collapsed .btn-logout {
+    justify-content: center;
+    padding: 12px 0;
+}
+
+.sidebar.collapsed .btn-logout svg {
+    margin: 0;
+}
+
+.sidebar.collapsed .footer-actions {
+    flex-direction: column;
+    gap: 15px;
 }

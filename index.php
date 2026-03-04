@@ -32,9 +32,9 @@
 
             <form action="auth/verifica_login.php" method="post">
                 <div class="form-group">
-                    <label for="username">Usuário</label>
+                    <label for="username">E-mail ou NIF</label>
                     <input type="text" class="form-control" id="username" name="username"
-                        placeholder="Digite seu usuário" required>
+                        placeholder="Ex: seu.nome@sp.senai.br ou seu NIF" required>
                 </div>
                 <div class="form-group">
                     <label for="password">Senha</label>
@@ -44,10 +44,11 @@
                 <button type="submit" class="btn-primary">Entrar no Sistema</button>
             </form>
             <div class="auth-links">
-                <a href="public/form_cadastro.php">Não tem uma conta? Solicitar Acesso</a>
+                <a href="public/form_cadastro_colaborador.php">Sou Colaborador e não tenho conta</a>
             </div>
         </div>
     </div>
+    <script src="js/script.js"></script>
 </body>
 
 </html>

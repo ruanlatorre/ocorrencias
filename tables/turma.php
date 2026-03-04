@@ -17,21 +17,16 @@ $sql = "SELECT t.*, c.nome as nome_curso, col.nome as nome_responsavel
         ORDER BY t.nome ASC";
 $result = $conn->query($sql);
 ?>
-<!DOCTYPE html>
-<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <title>Tabela de Turmas</title>
     <link rel="stylesheet" href="../css/style.css">
-    <style>
-        body { background: var(--bg-color); padding: <?php echo $is_modal ? '0' : '20px'; ?>; color: var(--text-primary); }
-        .table-container { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border-color); }
-        th { background: rgba(255, 255, 255, 0.03); color: var(--accent-red); font-size: 14px; text-transform: uppercase; }
-        tr:hover { background: rgba(255, 255, 255, 0.02); }
-    </style>
 </head>
-<body>
+<body class="<?php echo $is_modal ? 'is-modal' : ''; ?>">
+    <div class="search-container">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="tableSearch" placeholder="Pesquisar turma por nome, período, curso ou responsável...">
+    </div>
     <div class="table-container">
         <table>
             <thead>
@@ -71,5 +66,6 @@ $result = $conn->query($sql);
             </tbody>
         </table>
     </div>
+    <script src="../js/script.js"></script>
 </body>
 </html>

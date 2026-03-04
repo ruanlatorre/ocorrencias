@@ -73,31 +73,21 @@ $result_colaboradores = $conn->query($sql_colaboradores);
                 </div>
 
                 <div class="form-group">
-                    <label for="curso_id">Curso</label>
-                    <select class="form-control" id="curso_id" name="curso_id" required style="appearance: auto;">
-                        <option value="" disabled selected>Selecione um curso...</option>
-                        <?php if ($result_cursos && $result_cursos->num_rows > 0): ?>
-                            <?php while ($curso = $result_cursos->fetch_assoc()): ?>
-                                <option value="<?php echo $curso['id']; ?>"><?php echo htmlspecialchars($curso['nome']); ?>
-                                </option>
-                            <?php endwhile; ?>
-                        <?php else: ?>
-                            <option value="" disabled>Nenhum curso cadastrado</option>
-                        <?php endif; ?>
-                    </select>
+                    <label for="curso_search">Curso</label>
+                    <div class="autocomplete-wrapper">
+                        <input type="text" class="form-control" id="curso_search" placeholder="Digite o nome do curso..." required autocomplete="off">
+                        <input type="hidden" id="curso_id" name="curso_id">
+                        <div id="curso_results" class="autocomplete-results"></div>
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="colaborador_id">Colaborador (Responsável)</label>
-                    <select class="form-control" id="colaborador_id" name="colaborador_id" style="appearance: auto;">
-                        <option value="" selected>Selecione um responsável (opcional)...</option>
-                        <?php if ($result_colaboradores && $result_colaboradores->num_rows > 0): ?>
-                            <?php while ($colab = $result_colaboradores->fetch_assoc()): ?>
-                                <option value="<?php echo $colab['id']; ?>"><?php echo htmlspecialchars($colab['nome']); ?>
-                                </option>
-                            <?php endwhile; ?>
-                        <?php endif; ?>
-                    </select>
+                    <label for="colaborador_search">Colaborador (Responsável)</label>
+                    <div class="autocomplete-wrapper">
+                        <input type="text" class="form-control" id="colaborador_search" placeholder="Digite o nome do responsável..." autocomplete="off">
+                        <input type="hidden" id="colaborador_id" name="colaborador_id">
+                        <div id="colaborador_results" class="autocomplete-results"></div>
+                    </div>
                 </div>
 
                 <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">

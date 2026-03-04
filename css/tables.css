@@ -1,0 +1,139 @@
+/* Centralized Table Styles */
+.table-container {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+th {
+    background: var(--table-header-bg);
+    color: var(--accent-red);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+td {
+    color: var(--text-primary);
+}
+
+tr:hover {
+    background: var(--table-hover-bg);
+}
+
+/* Icon Buttons for Tables */
+.btn-icon {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+}
+
+.btn-icon-delete:hover {
+    background: rgba(255, 51, 51, 0.15);
+    color: var(--accent-red);
+}
+
+/* Search Bar Container */
+.search-container {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px 16px;
+}
+
+.search-container input {
+    border: none;
+    background: transparent;
+    color: var(--text-primary);
+    font-size: 14px;
+    width: 100%;
+    padding: 8px;
+    outline: none;
+}
+
+.search-container svg {
+    color: var(--text-secondary);
+    margin-right: 8px;
+}
+
+/* Status Badges */
+.status-Ativo {
+    color: #28a745;
+}
+
+.status-Inativo {
+    color: #dc3545;
+}
+
+.badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-Admin {
+    background: rgba(255, 51, 51, 0.1);
+    color: var(--accent-red);
+}
+
+.badge-Professor {
+    background: rgba(51, 153, 255, 0.1);
+    color: #3399ff;
+}
+
+.badge-Usuario {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+}
+
+/* Ocorrencia Badges */
+.badge-Leve {
+    background: rgba(51, 153, 255, 0.1);
+    color: #3399ff;
+}
+
+.badge-Media {
+    background: rgba(255, 193, 7, 0.1);
+    color: #ffc107;
+}
+
+.badge-Grave {
+    background: rgba(255, 51, 51, 0.1);
+    color: var(--accent-red);
+}
+
+.badge-Suspensao {
+    background: #ff3333;
+    color: #fff;
+}

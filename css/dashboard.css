@@ -1,13 +1,13 @@
 /* Dashboard Specific Styles */
 
 .welcome-card {
-    background: linear-gradient(135deg, var(--card-bg) 0%, #1c1d22 100%);
+    background: linear-gradient(135deg, var(--card-bg) 0%, var(--bg-color) 100%);
     padding: 40px;
     border-radius: 16px;
     border: 1px solid var(--border-color);
     margin-bottom: 32px;
     border-left: 4px solid var(--accent-red);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 30px var(--shadow-color);
 }
 
 .welcome-card h2 {

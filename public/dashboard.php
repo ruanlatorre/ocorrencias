@@ -31,9 +31,10 @@ $date = date('d/m/Y');
 
         <!-- Welcome Card -->
         <div class="welcome-card">
-            <h2>Bem-vindo ao Sistema NR12</h2>
-            <p>Sistema desenvolvido para otimizar o processo de checklists de máquinas, substituindo formulários em
-                papel por uma solução digital prática e eficiente.</p>
+            <h2>Bem-vindo ao Sistema de Ocorrências SENAI</h2>
+            <p>Sistema desenvolvido para registrar, monitorar e gerenciar ocorrências disciplinares de forma
+                centralizada e eficiente, garantindo um ambiente educacional mais organizado e focado na gestão docente.
+            </p>
         </div>
 
         <!-- Info Cards -->
@@ -48,9 +49,9 @@ $date = date('d/m/Y');
                         <path d="M9 15l2 2 4-4"></path>
                     </svg>
                 </div>
-                <h3>Checklists Digitais</h3>
-                <p>Realize o checklist antes de utilizar uma máquina acessando com matrícula e NI. Processo simples,
-                    rápido e focado na segurança.</p>
+                <h3>Gestão de Ocorrências</h3>
+                <p>Registre e acompanhe incidentes de forma rápida. O sistema unifica dados de turmas e colaboradores
+                    para um controle disciplinar completo e transparente.</p>
             </div>
 
             <!-- Card 2 -->
@@ -62,9 +63,9 @@ $date = date('d/m/Y');
                         <path d="M9 12l2 2 4-4"></path>
                     </svg>
                 </div>
-                <h3>Sobre a Norma NR12</h3>
-                <p>A NR-12 estabelece requisitos mínimos de segurança no trabalho com máquinas e equipamentos, sendo
-                    obrigatória para organizações que operam sob regime CLT.</p>
+                <h3>Controle Educacional</h3>
+                <p>Mantenha o histórico disciplinar atualizado, facilite a comunicação com os responsáveis e promova um
+                    ambiente de aprendizado seguro e de qualidade.</p>
             </div>
         </div>
     </main>

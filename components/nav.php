@@ -6,6 +6,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <aside class="sidebar">
     <div class="sidebar-header">
         <span class="sidebar-logo">SENAI</span>
+        <button id="toggleSidebar" class="btn-toggle-sidebar" title="Recolher Menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" width="20" height="20">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
     </div>
 
     <div class="sidebar-menu">
@@ -15,7 +23,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                 <polyline points="9 22 9 12 15 12 15 22"></polyline>
             </svg>
-            Home / Dashboard
+            <span>Home / Dashboard</span>
         </a>
         <a href="form_ocorrencia.php"
             class="menu-item <?php echo ($current_page == 'form_ocorrencia.php') ? 'active' : ''; ?>">
@@ -27,7 +35,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <line x1="16" y1="17" x2="8" y2="17"></line>
                 <polyline points="10 9 9 9 8 9"></polyline>
             </svg>
-            Registrar Ocorrência
+            <span>Registrar Ocorrência</span>
         </a>
         <a href="form_curso.php" class="menu-item <?php echo ($current_page == 'form_curso.php') ? 'active' : ''; ?>">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -35,7 +43,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
                 <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
             </svg>
-            Cursos
+            <span>Cursos</span>
         </a>
         <a href="form_turma.php" class="menu-item <?php echo ($current_page == 'form_turma.php') ? 'active' : ''; ?>">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -45,16 +53,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                 <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
             </svg>
-            Turmas
+            <span>Turmas</span>
         </a>
-        <a href="form_aluno.php" class="menu-item <?php echo ($current_page == 'form_aluno.php') ? 'active' : ''; ?>">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-            </svg>
-            Alunos
-        </a>
+
         <a href="form_colaborador.php"
             class="menu-item <?php echo ($current_page == 'form_colaborador.php') ? 'active' : ''; ?>">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -63,7 +64,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <circle cx="8.5" cy="7" r="4"></circle>
                 <polyline points="17 11 19 13 23 9"></polyline>
             </svg>
-            Colaboradores
+            <span>Colaboradores</span>
         </a>
 
         <!-- Botão de Tabelas (Novo) -->
@@ -74,15 +75,15 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <line x1="3" y1="9" x2="21" y2="9"></line>
                 <line x1="9" y1="21" x2="9" y2="9"></line>
             </svg>
-            Visualizar Tabelas
+            <span>Visualizar Tabelas</span>
         </a>
     </div>
 
     <div class="sidebar-footer">
         <div class="footer-actions">
-            <button title="Modo Noturno">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" width="20" height="20">
+            <button title="Alternar Tema" id="themeToggle" onclick="toggleTheme()">
+                <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                 </svg>
             </button>
@@ -95,7 +96,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </path>
                 </svg>
             </button>
-            <button title="Perfil">
+            <button title="Perfil" onclick="openProfileModal()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                     stroke-linejoin="round" width="20" height="20">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -105,7 +106,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </div>
         <form action="../auth/logout.php" method="post" style="width: 100%;">
             <button class="btn-logout" type="submit">
-                Sair
+                <span>Sair</span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                     stroke-linejoin="round" width="18" height="18">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
@@ -149,14 +150,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </svg>
                     <span>Ocorrências</span>
                 </button>
-                <button class="table-btn" onclick="viewTable('aluno')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
-                    <span>Alunos</span>
-                </button>
+
                 <button class="table-btn" onclick="viewTable('curso')">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -207,6 +201,39 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     style="max-height: 50vh; overflow-y: auto; padding-right: 10px; margin-bottom: 20px;"></div>
                 <button type="submit" class="btn-primary" style="width: 100%;">Salvar Alterações</button>
             </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Perfil do Usuário -->
+<div id="profileModal" class="modal-overlay">
+    <div class="modal-container" style="max-width: 450px;">
+        <div class="modal-header">
+            <h3>Informações do Perfil</h3>
+            <span class="modal-close" onclick="closeProfileModal()">&times;</span>
+        </div>
+        <div class="modal-content">
+            <div class="profile-info-grid">
+                <div class="info-item">
+                    <label>Nome Completo</label>
+                    <p><?php echo htmlspecialchars($_SESSION['username']); ?></p>
+                </div>
+                <div class="info-item">
+                    <label>NIF / Identificação</label>
+                    <p><?php echo htmlspecialchars($_SESSION['nif'] ?? 'N/A'); ?></p>
+                </div>
+                <div class="info-item">
+                    <label>E-mail Corporativo</label>
+                    <p><?php echo htmlspecialchars($_SESSION['user_email'] ?? 'N/A'); ?></p>
+                </div>
+                <div class="info-item">
+                    <label>Cargo / Permissão</label>
+                    <p><?php echo htmlspecialchars($_SESSION['role'] === 'aluno' ? 'Aluno' : ($_SESSION['permissao'] ?? 'Colaborador')); ?>
+                    </p>
+                </div>
+            </div>
+            <button class="btn-primary" onclick="closeProfileModal()"
+                style="width: 100%; margin-top: 24px;">Fechar</button>
         </div>
     </div>
 </div>

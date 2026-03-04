@@ -45,31 +45,30 @@ $result_turmas = $conn->query($sql_turmas);
 
             <form onsubmit="submitFormPost(event, 'ocorrencia')" style="max-width: 600px; margin: 0 auto;">
                 <div class="form-group">
-                    <label for="nome_aluno">Nome do Aluno</label>
-                    <input type="text" class="form-control" id="nome_aluno" name="nome_aluno"
-                        placeholder="Digite o nome completo do aluno" required>
+                    <label for="nome_aluno_search">Pessoa Envolvida</label>
+                    <div class="autocomplete-wrapper">
+                        <input type="text" class="form-control" id="nome_aluno_search" name="nome_aluno"
+                            placeholder="Nome de quem cometeu a ocorrência" required autocomplete="off">
+                        <div id="nome_aluno_results" class="autocomplete-results"></div>
+                    </div>
                 </div>
 
                 <div class="grid-cards" style="margin-bottom: 20px;">
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label for="turma">Turma</label>
-                        <select class="form-control" id="turma" name="turma" required style="appearance: auto;">
-                            <option value="" disabled selected>Selecione a turma...</option>
-                            <?php if ($result_turmas && $result_turmas->num_rows > 0): ?>
-                                <?php while ($turma = $result_turmas->fetch_assoc()): ?>
-                                    <option value="<?php echo htmlspecialchars($turma['nome']); ?>">
-                                        <?php echo htmlspecialchars($turma['nome']); ?>
-                                    </option>
-                                <?php endwhile; ?>
-                            <?php else: ?>
-                                <option value="" disabled>Nenhuma turma cadastrada</option>
-                            <?php endif; ?>
-                        </select>
+                        <label for="turma_search">Turma</label>
+                        <div class="autocomplete-wrapper">
+                            <input type="text" class="form-control" id="turma_search" name="turma"
+                                placeholder="Digite a turma..." required autocomplete="off">
+                            <div id="turma_results" class="autocomplete-results"></div>
+                        </div>
                     </div>
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label for="professor_responsavel">Professor Responsável</label>
-                        <input type="text" class="form-control" id="professor_responsavel" name="professor_responsavel"
-                            placeholder="Nome do Professor" required>
+                        <label for="professor_search">Professor Responsável</label>
+                        <div class="autocomplete-wrapper">
+                            <input type="text" class="form-control" id="professor_search" name="professor_responsavel"
+                                placeholder="Nome do Professor" required autocomplete="off">
+                            <div id="professor_results" class="autocomplete-results"></div>
+                        </div>
                     </div>
                 </div>
 

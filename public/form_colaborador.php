@@ -47,9 +47,12 @@ $date = date('d/m/Y');
                             placeholder="Número de Identificação" required>
                     </div>
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label for="setor">Setor</label>
-                        <input type="text" class="form-control" id="setor" name="setor"
-                            placeholder="Ex: Coordenação, T.I" required>
+                        <label for="setor_search">Setor</label>
+                        <div class="autocomplete-wrapper">
+                            <input type="text" class="form-control" id="setor_search" name="setor"
+                                placeholder="Ex: Coordenação, T.I" required autocomplete="off">
+                            <div id="setor_results" class="autocomplete-results"></div>
+                        </div>
                     </div>
                 </div>
 
@@ -69,8 +72,8 @@ $date = date('d/m/Y');
                     <div class="form-group" style="margin-bottom: 0;">
                         <label for="permissao">Permissão</label>
                         <select class="form-control" id="permissao" name="permissao" required style="appearance: auto;">
-                            <option value="Usuario" selected>Usuário Comum</option>
                             <option value="Professor">Professor</option>
+                            <option value="Gestor">Gestor</option>
                             <option value="Admin">Administrador</option>
                         </select>
                     </div>

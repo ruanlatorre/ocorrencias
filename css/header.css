@@ -1,0 +1,36 @@
+/* Header / Topbar Styles */
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    background-color: var(--card-bg);
+    padding: 16px 24px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.user-info,
+.date-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-info span.greeting {
+    color: var(--text-primary);
+    margin-left: 12px;
+    font-weight: 500;
+}
+
+.user-info span.name {
+    color: var(--accent-red);
+    font-weight: 600;
+    margin-left: 4px;
+}
+
+.date-info {
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 500;
+}

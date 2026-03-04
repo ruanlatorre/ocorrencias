@@ -1,0 +1,77 @@
+================================================================================
+RELATÓRIO TÉCNICO E DESCRITIVO DE DESENVOLVIMENTO
+================================================================================
+Projeto: Sistema de Ocorrências SENAI
+Data de Atualização: Março/2026
+Tecnologias Envolvidas: PHP (Backend procedural), MySQL (Database), HTML5, CSS3 
+(Padrão Dark Theme e Componentes Customizados).
+================================================================================
+
+Este documento descreve detalhadamente todas as etapas, decisões lógicas e entregas realizadas durante a refatoração e expansão do "Sistema de Ocorrências SENAI". O objetivo principal da sessão foi transformar um protótipo básico em um sistema CRUD (Create, Read, Update, Delete) robusto, modular, e preparado para o fluxo real de uma instituição de ensino.
+
+--------------------------------------------------------------------------------
+1. INTEGRIDADE E SEGURANÇA (AUTENTICAÇÃO E SESSÕES)
+--------------------------------------------------------------------------------
+O sistema original apresentava vulnerabilidades e inconsistências no fluxo de login. 
+- Implementação de Hash de Senhas: As senhas de cadastro e login foram substituídas para utilização do método `password_hash()` nativo do PHP. Isso garante que as credenciais fiquem armazenadas com segurança no banco de dados.
+- Bloqueio de Rotas Privadas: Todas as telas internas do sistema receberam travas (session_start) no cabeçalho do arquivo PHP para garantir que apenas usuários com a `$_SESSION['user_logado']` ativa acessem as informações, redirecionando invasores para `index.php`.
+- Reestruturação de Auth: Arquivos como `verifica_login.php` e `processa_cadastro.php` foram organizados ou validados garantindo o ciclo correto de Autenticar -> Logar -> Deslogar (Logout).
+
+--------------------------------------------------------------------------------
+2. ARQUITETURA DE DIRETÓRIOS E MVC BÁSICO
+--------------------------------------------------------------------------------
+Para evitar o "Código Espaguete" (onde visual e regras de negócio se misturam no mesmo script), o sistema foi desmembrado em responsabilidades mais claras:
+- /public/: Destinada exclusivamente aos formulários visuais (Front-end) onde o usuário digita os dados (ex: form_curso.php, dashboard.php).
+- /api/: Criada para agrupar as rotas transacionais de envio (POST). Formulários na pasta public apontam para scripts em `/api/` para gravar as coisas no banco e retornar feedback.
+- /tables/: Nova central de Gestão de Dados (Read). Armazena as visualizações de tabelas completas.
+- /config/: Mantida e validada a conexão PDO/MySQLi centralizada em `conexao.php`.
+
+--------------------------------------------------------------------------------
+3. MODELAGEM DE DADOS E NOVAS ENTIDADES (DATABASE.SQL)
+--------------------------------------------------------------------------------
+A fundação do banco de dados precisava comportar todo um ecossistema escolar.
+- Expansão do SQL: O `database.sql` foi enriquecido para contemplar:
+  * `curso`: Gerencia as opções de treinamentos/cursos (id, nome, status).
+  * `turma`: Associa estudantes a horários e professores (id, turma_nome, periodo, data_inicio, data_fim, id_curso, id_colaborador).
+  * `aluno`: Entidade central que comete ocorrências (id, nome, matricula, entrada, saida).
+  * `colaborador`: Professores e Administradores (id, nome, nif, email, senha, setor, status, permissao).
+  * `ocorrencia`: Entidade de registro disciplinar ligando aluno a um nível de punição.
+
+--------------------------------------------------------------------------------
+4. CRIAÇÃO DOS FORMULÁRIOS DE ENTRADA (MÓDULO DE CADASTRO)
+--------------------------------------------------------------------------------
+Desenvolvemos telas do zero, respeitando estritamente o manual de marca/design exigido (Dark Mode com tipografia limpa, bordas arredondadas e destaques em vermelho/azul):
+- Criamos `form_curso.php`, `form_turma.php`, `form_aluno.php`, `form_colaborador.php`.
+- Para Registro de Ocorrência (`form_ocorrencia.php`), incluímos campos de texto livre (`causa`) e seletores de níveis de gravidade (Leve, Média, Grave, Suspensão).
+- Adicionamos na interface avisos de Sucesso ou Erro (via `$_GET['success']`) que fornecem retorno visual instantâneo ao operador.
+
+--------------------------------------------------------------------------------
+5. MÓDULO DE LISTAGEM - O CORAÇÃO DO GERENCIAMENTO (READ)
+--------------------------------------------------------------------------------
+Usuários precisavam de um local para revisar o que cadastraram.
+- Criamos a pasta `tables/` contendo arquivos `.php` equivalentes para cada entidade.
+- Utilizando queries de `SELECT *` e `LEFT JOIN` (para trazer nomes reais usando IDs), montamos tabelas HTML dinâmicas.
+- As tabelas possuem Badges (etiquetas coloridas) que indicam o status ou a gravidade da punição. Ex: Suspensão fica grifado em Vermelho, enquanto cadastros normais ficam em Verde ou Neutro.
+- Adicionamos nos cabeçalhos dos formulários o botão "Ver Cadastros" e nas tabelas o botão "Novo Cadastro", formando um ciclo circular contínuo e amigável ao usuário.
+
+--------------------------------------------------------------------------------
+6. ENDPOINTS E NAVEGAÇÃO DE EXCLUSÃO (DELETE)
+--------------------------------------------------------------------------------
+- As tabelas listadas receberam Botões de Ação na última coluna.
+- O Botão "Excluir" (Ícone Vermelho de Lixeira) foi implementado com um travamento via `onsubmit="return confirm(...)"` em Javascript nativo na própria tag form, para evitar que um clique sem querer apague os dados.
+- O usuário requisitou posteriormente que a lógica fosse isolada, então toda a exclusão foi enviada para arquivos separados dentro de `tables/delete_tables/` (ex: `deleta_curso.php`).
+- A lógica de exclusão foi programada usando os conceitos mais atuais de PDO/MySQLi com `$stmt->prepare()` e `$stmt->bind_param("i", $id)`, prevenindo 100% ataques de "SQL Injection" pelas URLs.
+
+--------------------------------------------------------------------------------
+7. MECANISMO DE ATUALIZAÇÃO E RETIFICAÇÃO (UPDATE E EDIT)
+--------------------------------------------------------------------------------
+- Assim como a exclusão, a edição mereceu uma pasta própria: `tables/edit_tables/`.
+- Ao clicar no Botão Verde (Lápis) em qualquer listagem, o ID da entidade é mandado via `$GET` para a rota de edição correspondiente (ex: `edita_aluno.php?id=14`).
+- A tela de edição abre buscando o ID no Banco de Dados instantaneamente e preenche os campos do formulário (via `value="..."` e `<option selected>`) com os dados antigos já registrados.
+- O atendente só precisa alterar o que errou no passado e clicar em Salvar. O SQL fará um UPDATE condicional.
+- Casos complexos tratam Senhas e Datas vazias. O campo Editar Senha num Colaborador foi projetado para: se deixado em branco, a senha antiga continua ativa intacta; se preenchido, a string sofre novo Hash e atualiza o acesso.
+
+--------------------------------------------------------------------------------
+RESUMO E STATUS ATUAL
+--------------------------------------------------------------------------------
+O Sistema de Ocorrências SENAI deixou de ser um protótipo estático para se tornar um Monolito PHP completo e dinâmico, totalmente protegido à injeções básicas e contendo um pacote CRUD fechado e operante sem quebras de layout. Todos os requisitos extras fornecidos pelo desenvolvedor front-end ou arquiteto foram aplicados com sucesso.

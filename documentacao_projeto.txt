@@ -1,0 +1,87 @@
+# Estrutura de Pastas do Projeto
+
+ocorrencias/
+├── api/                        # Controllers (Processamento de dados)
+│   ├── processa_colaborador.php
+│   ├── processa_curso.php
+│   ├── processa_ocorrencia.php
+│   ├── processa_turma.php
+│   ├── search.php
+│   └── verificar_senha_tabelas.php
+├── assets/                     # Arquivos estáticos (Imagens, etc.)
+├── auth/                       # Lógica de Autenticação
+│   ├── logout.php
+│   └── verifica_login.php
+├── components/                 # Componentes Reutilizáveis (Views parciais)
+│   ├── header.php
+│   └── nav.php
+├── config/                     # Configurações (Banco de Dados)
+│   └── conexao.php             # Model (Conexão e abstração básica)
+├── css/                        # Estilos (CSS)
+├── js/                         # Scripts (JavaScript)
+├── public/                     # Views Principais (Formulários e Páginas)
+│   ├── dashboard.php
+│   ├── form_cadastro_colaborador.php
+│   ├── form_colaborador.php
+│   ├── form_curso.php
+│   ├── form_ocorrencia.php
+│   └── form_turma.php
+├── tables/                     # Views de Listagem (Tabelas)
+│   ├── api/                    # Processamento específico para tabelas
+│   │   ├── colaborador.php
+│   │   ├── curso.php
+│   │   ├── ocorrencia.php
+│   │   └── turma.php
+│   ├── colaborador.php
+│   ├── curso.php
+│   ├── ocorrencia.php
+│   └── turma.php
+├── database.sql                # Esquema do Banco de Dados (Model)
+├── index.php                   # Ponto de entrada (View de Login)
+└── relatorio_desenvolvimento.txt
+
+---
+
+# Diagrama MVC (Model-View-Controller)
+
+O projeto segue um padrão MVC simplificado em PHP puro:
+
++-------------------------------------------------------------+
+|                                                             |
+|                         USUÁRIO                             |
+|                            |                                |
++----------------------------|--------------------------------+
+                             |
+                             v
++-------------------------------------------------------------+
+|                      VIEW (Visão)                           |
+|  - public/ (Formulários)                                    |
+|  - tables/ (Listagens)                                      |
+|  - components/ (Header, Nav)                                |
+|  - css/ & js/                                               |
++----------------------------|--------------------------------+
+                             |
+                   (Ação / Requisição POST/GET)
+                             |
+                             v
++-------------------------------------------------------------+
+|                   CONTROLLER (Controle)                     |
+|  - api/ (Processamento de Formulários)                      |
+|  - auth/ (Verificação de Login)                             |
+|  - tables/api/ (Lógica de dados para tabelas)               |
++----------------------------|--------------------------------+
+                             |
+                    (Consulta / Escrita)
+                             |
+                             v
++-------------------------------------------------------------+
+|                     MODEL (Modelo)                          |
+|  - config/conexao.php (Conexão MySQL)                       |
+|  - Banco de Dados (MySQL / database.sql)                    |
++-------------------------------------------------------------+
+
+## Fluxo de Dados:
+1. O usuário interage com a **VIEW** (ex: preenche um formulário em `form_ocorrencia.php`).
+2. A **VIEW** envia os dados para o **CONTROLLER** (ex: `api/processa_ocorrencia.php`).
+3. O **CONTROLLER** valida os dados e interage com o **MODEL** (ex: executa uma query via `conexao.php`).
+4. O **CONTROLLER** processa o resultado e redireciona o usuário de volta para uma **VIEW** (ex: `dashboard.php`).

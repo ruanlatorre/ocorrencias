@@ -9,7 +9,7 @@ switch ($method) {
     case 'GET':
         $id = isset($_GET['id']) ? (int) $_GET['id'] : null;
         if ($id) {
-            $sql = "SELECT id, nome, nif, email, setor, status, permissao, created_at FROM colaborador WHERE id = ?";
+            $sql = "SELECT * FROM aluno WHERE id = ?";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param('i', $id);
             $stmt->execute();
@@ -17,8 +17,7 @@ switch ($method) {
             echo json_encode($result->fetch_assoc());
             $stmt->close();
         } else {
-            // Excluding password hash for security
-            $sql = "SELECT id, nome, nif, email, setor, status, permissao, created_at FROM colaborador ORDER BY nome ASC";
+            $sql = "SELECT a.*, c.nome as curso_nome, t.nome as turma_nome FROM aluno a LEFT JOIN curso c ON a.curso_id = c.id LEFT JOIN turma t ON a.turma_id = t.id ORDER BY a.nome ASC";
             $result = $conn->query($sql);
             $data = [];
             while ($row = $result->fetch_assoc()) {
@@ -30,35 +29,30 @@ switch ($method) {
 
     case 'POST':
         $input = json_decode(file_get_contents('php://input'), true);
-        if (!isset($input['nome'], $input['nif'], $input['email'], $input['senha'], $input['setor'])) {
+        if (!isset($input['nome'], $input['matricula'], $input['data_entrada'], $input['curso_id'])) {
             http_response_code(400);
             echo json_encode(['error' => 'Missing required fields']);
             exit;
         }
 
         $nome = $conn->real_escape_string($input['nome']);
-        $nif = $conn->real_escape_string($input['nif']);
-        $email = $conn->real_escape_string($input['email']);
-        $senha = $input['senha']; // Not escaped before hashing
-        $setor = $conn->real_escape_string($input['setor']);
-        $status = isset($input['status']) ? $conn->real_escape_string($input['status']) : 'Ativo';
-        $permissao = isset($input['permissao']) ? $conn->real_escape_string($input['permissao']) : 'Usuario';
+        $matricula = $conn->real_escape_string($input['matricula']);
+        $data_entrada = $conn->real_escape_string($input['data_entrada']);
+        $data_saida = isset($input['data_saida']) && !empty($input['data_saida']) ? $conn->real_escape_string($input['data_saida']) : null;
+        $curso_id = (int) $input['curso_id'];
+        $turma_id = isset($input['turma_id']) && !empty($input['turma_id']) ? (int) $input['turma_id'] : null;
 
-        $hashed_password = password_hash($senha, PASSWORD_DEFAULT);
-
-        $sql = "INSERT INTO colaborador (nome, nif, email, senha, setor, status, permissao) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO aluno (nome, matricula, data_entrada, data_saida, curso_id, turma_id) VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param('sssssss', $nome, $nif, $email, $hashed_password, $setor, $status, $permissao);
+        $stmt->bind_param('ssssii', $nome, $matricula, $data_entrada, $data_saida, $curso_id, $turma_id);
 
         if ($stmt->execute()) {
             http_response_code(201);
             echo json_encode(['success' => true, 'id' => $conn->insert_id]);
         } else {
             http_response_code(500);
-            echo json_encode(['error' => 'Failed to insert']);
+            echo json_encode(['error' => 'Failed to insert. Matricula might exist already.']);
         }
-
-
         $stmt->close();
         break;
 
@@ -76,20 +70,18 @@ switch ($method) {
         $types = '';
         $params = [];
 
-        $allowedFields = ['nome', 'nif', 'email', 'setor', 'status', 'permissao'];
+        $allowedFields = ['nome', 'matricula', 'data_entrada', 'data_saida', 'curso_id', 'turma_id'];
         foreach ($allowedFields as $field) {
             if (array_key_exists($field, $input)) {
                 $updates[] = "$field = ?";
-                $types .= 's';
-                $params[] = $input[$field] !== null ? $conn->real_escape_string($input[$field]) : null;
+                if (in_array($field, ['curso_id', 'turma_id'])) {
+                    $types .= 'i';
+                    $params[] = $input[$field] !== null && $input[$field] !== '' ? (int) $input[$field] : null;
+                } else {
+                    $types .= 's';
+                    $params[] = $input[$field] !== null && $input[$field] !== '' ? $conn->real_escape_string($input[$field]) : null;
+                }
             }
-        }
-
-        // Handle password update separately securely
-        if (isset($input['senha'])) {
-            $updates[] = "senha = ?";
-            $types .= 's';
-            $params[] = password_hash($input['senha'], PASSWORD_DEFAULT);
         }
 
         if (empty($updates)) {
@@ -98,7 +90,7 @@ switch ($method) {
             exit;
         }
 
-        $sql = "UPDATE colaborador SET " . implode(', ', $updates) . " WHERE id = ?";
+        $sql = "UPDATE aluno SET " . implode(', ', $updates) . " WHERE id = ?";
         $types .= 'i';
         $params[] = $id;
 
@@ -124,7 +116,7 @@ switch ($method) {
             exit;
         }
 
-        $sql = "DELETE FROM colaborador WHERE id = ?";
+        $sql = "DELETE FROM aluno WHERE id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param('i', $id);
 
@@ -147,9 +139,6 @@ switch ($method) {
         echo json_encode(['error' => 'Method Not Allowed']);
         break;
 }
-
-
-
 
 $conn->close();
 ?>

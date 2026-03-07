@@ -3,6 +3,24 @@
 require_once '../../config/conexao.php';
 header('Content-Type: application/json');
 
+/**
+ * Captura o endereço IP real do usuário.
+ * Suporta proxies e load balancers.
+ */
+function getAddressIP()
+{
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        $ip = $_SERVER['HTTP_CLIENT_IP'];
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        // Pode conter múltiplos IPs separados por vírgula
+        $ipList = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+        $ip = trim($ipList[0]);
+    } else {
+        $ip = $_SERVER['REMOTE_ADDR'];
+    }
+    return $ip;
+}
+
 $method = $_SERVER['REQUEST_METHOD'];
 $conn = conexaoBanco();
 
@@ -10,7 +28,7 @@ switch ($method) {
     case 'GET':
         $id = isset($_GET['id']) ? (int) $_GET['id'] : null;
         if ($id) {
-            $sql = "SELECT id, nome, nif, email, setor, status, permissao, created_at FROM colaborador WHERE id = ?";
+            $sql = "SELECT id, nome, nif, email, setor, status, permissao, ip_address, created_at FROM colaborador WHERE id = ?";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param('i', $id);
             $stmt->execute();
@@ -19,7 +37,7 @@ switch ($method) {
             $stmt->close();
         } else {
             // Excluding password hash for security
-            $sql = "SELECT id, nome, nif, email, setor, status, permissao, created_at FROM colaborador ORDER BY nome ASC";
+            $sql = "SELECT id, nome, nif, email, setor, status, permissao, ip_address, created_at FROM colaborador ORDER BY nome ASC";
             $result = $conn->query($sql);
             $data = [];
             while ($row = $result->fetch_assoc()) {
@@ -46,10 +64,11 @@ switch ($method) {
         $permissao = isset($input['permissao']) ? $conn->real_escape_string($input['permissao']) : 'Usuario';
 
         $hashed_password = password_hash($senha, PASSWORD_DEFAULT);
+        $ip_address = getAddressIP();
 
-        $sql = "INSERT INTO colaborador (nome, nif, email, senha, setor, status, permissao) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO colaborador (nome, nif, email, senha, setor, status, permissao, ip_address) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param('sssssss', $nome, $nif, $email, $hashed_password, $setor, $status, $permissao);
+        $stmt->bind_param('ssssssss', $nome, $nif, $email, $hashed_password, $setor, $status, $permissao, $ip_address);
 
         if ($stmt->execute()) {
             http_response_code(201);

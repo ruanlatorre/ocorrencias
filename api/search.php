@@ -35,6 +35,9 @@ switch ($type) {
     case 'setor':
         $sql = "SELECT DISTINCT setor as label FROM colaborador WHERE setor LIKE ? LIMIT 10";
         break;
+    case 'aluno':
+        $sql = "SELECT id, nome as label FROM aluno WHERE nome LIKE ? LIMIT 10";
+        break;
     case 'envolvido':
         // Busca nomes de pessoas já envolvidas em ocorrências
         $sql = "SELECT DISTINCT nome_aluno as label FROM ocorrencia WHERE nome_aluno LIKE ? LIMIT 10";

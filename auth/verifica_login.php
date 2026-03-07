@@ -1,17 +1,22 @@
 <?php
 session_start();
 require_once '../config/conexao.php';
+header('Content-Type: application/json');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $conn = conexaoBanco();
-    $username = trim($_POST['username']);
-    $password = $_POST['password'];
+    $input = json_decode(file_get_contents('php://input'), true);
+
+    // If not JSON, try $_POST
+    $username = trim($input['username'] ?? $_POST['username'] ?? '');
+    $password = $input['password'] ?? $_POST['password'] ?? '';
 
     if (empty($username) || empty($password)) {
-        header('Location: ../index.php?error=empty');
+        http_response_code(400);
+        echo json_encode(['error' => 'Preencha todos os campos.']);
         exit;
     }
 
+    $conn = conexaoBanco();
     $username_escaped = $conn->real_escape_string($username);
 
     // Procura apenas na tabela de colaborador (Professor/Gestor/Admin)
@@ -34,23 +39,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['nif'] = $user['nif'];
             $_SESSION['permissao'] = $user['permissao'];
 
-            header('Location: ../public/dashboard.php');
-            exit;
+            echo json_encode(['success' => true, 'redirect' => 'public/dashboard.php']);
         } else {
             // Senha incorreta
-            header('Location: ../index.php?error=invalid');
-            exit;
+            http_response_code(401);
+            echo json_encode(['error' => 'Usuário ou senha incorretos.']);
         }
     } else {
         // Usuário não encontrado
-        header('Location: ../index.php?error=invalid');
-        exit;
+        http_response_code(401);
+        echo json_encode(['error' => 'Usuário ou senha incorretos.']);
     }
 
     $stmt->close();
     $conn->close();
 } else {
-    header('Location: ../index.php');
-    exit;
+    http_response_code(405);
+    echo json_encode(['error' => 'Method Not Allowed']);
 }
 ?>

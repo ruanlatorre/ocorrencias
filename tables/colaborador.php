@@ -34,6 +34,7 @@ $result = $conn->query($sql);
                     <th>Setor</th>
                     <th>Permissão</th>
                     <th>Status</th>
+                    <th>IP</th>
                     <th style="text-align: center;">Ações</th>
                 </tr>
             </thead>
@@ -48,6 +49,7 @@ $result = $conn->query($sql);
                             <td><?php echo htmlspecialchars($row['setor']); ?></td>
                             <td><span class="badge badge-<?php echo $row['permissao']; ?>"><?php echo $row['permissao']; ?></span></td>
                             <td><span class="status-<?php echo $row['status']; ?>"><?php echo $row['status']; ?></span></td>
+                            <td><?php echo htmlspecialchars($row['ip_address'] ?? '—'); ?></td>
                             <td style="text-align: center; white-space: nowrap;">
                                 <button onclick="window.parent.editRecord('colaborador', <?php echo $row['id']; ?>)" class="btn-icon" title="Editar">
                                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
@@ -59,7 +61,7 @@ $result = $conn->query($sql);
                         </tr>
                     <?php endwhile; ?>
                 <?php else: ?>
-                    <tr><td colspan="8" style="text-align: center;">Nenhum colaborador cadastrado.</td></tr>
+                    <tr><td colspan="9" style="text-align: center;">Nenhum colaborador cadastrado.</td></tr>
                 <?php endif; ?>
             </tbody>
         </table>

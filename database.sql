@@ -26,8 +26,16 @@ CREATE TABLE IF NOT EXISTS colaborador (
     senha VARCHAR(255) NOT NULL,
     setor VARCHAR(100) NOT NULL,
     status ENUM('Ativo', 'Inativo') DEFAULT 'Ativo',
-    permissao ENUM('Admin', 'Professor', 'Usuario') DEFAULT 'Usuario'
+    permissao ENUM('Admin', 'Professor', 'Usuario') DEFAULT 'Usuario',
+    ip_address VARCHAR(45) NULL,
+    reset_token VARCHAR(6) NULL,
+    reset_expires DATETIME NULL
 );
+
+-- Atualização para bancos existentes: adicionar colunas
+ALTER TABLE colaborador ADD COLUMN IF NOT EXISTS ip_address VARCHAR(45) NULL;
+ALTER TABLE colaborador ADD COLUMN IF NOT EXISTS reset_token VARCHAR(6) NULL;
+ALTER TABLE colaborador ADD COLUMN IF NOT EXISTS reset_expires DATETIME NULL;
 
 -- Tabela: Turmas
 CREATE TABLE IF NOT EXISTS turma (

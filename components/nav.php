@@ -67,6 +67,17 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <span>Colaboradores</span>
         </a>
 
+        <a href="form_aluno.php" class="menu-item <?php echo ($current_page == 'form_aluno.php') ? 'active' : ''; ?>">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <span>Alunos</span>
+        </a>
+
         <!-- Botão de Tabelas (Novo) -->
         <a href="javascript:void(0)" class="menu-item special" onclick="openAccessModal()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -177,6 +188,16 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         <polyline points="17 11 19 13 23 9"></polyline>
                     </svg>
                     <span>Colaboradores</span>
+                </button>
+                <button class="table-btn" onclick="viewTable('aluno')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span>Alunos</span>
                 </button>
             </div>
 

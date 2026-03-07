@@ -36,9 +36,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize Autocompletes
     initAutocomplete('curso_search', 'curso_results', 'curso', 'curso_id');
     initAutocomplete('colaborador_search', 'colaborador_results', 'colaborador', 'colaborador_id');
-    initAutocomplete('turma_search', 'turma_results', 'turma');
+    initAutocomplete('turma_search', 'turma_results', 'turma', 'turma_id');
     initAutocomplete('professor_search', 'professor_results', 'colaborador');
-    initAutocomplete('nome_aluno_search', 'nome_aluno_results', 'envolvido');
+    initAutocomplete('nome_aluno_search', 'nome_aluno_results', 'aluno'); // Changed to search in aluno table
     initAutocomplete('setor_search', 'setor_results', 'setor');
 });
 
@@ -454,4 +454,252 @@ function initAutocomplete(inputId, resultsId, type, hiddenId = null) {
             resultsContainer.classList.remove('active');
         }
     });
+}
+
+function submitLoginForm(event) {
+    event.preventDefault();
+    const form = event.target;
+
+    // Hide existing alerts if any
+    const existingAlerts = document.querySelectorAll('.auth-card .alert');
+    existingAlerts.forEach(alert => alert.remove());
+
+    const formData = new FormData(form);
+    const data = {};
+    formData.forEach((value, key) => { data[key] = value; });
+
+    const btn = form.querySelector('button[type="submit"]');
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Entrando...';
+
+    fetch('auth/verifica_login.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                // Success, redirecting
+                window.location.href = result.redirect;
+            } else {
+                // Error, show alert
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-error';
+                alertDiv.textContent = result.error || 'Erro ao fazer login.';
+                form.parentNode.insertBefore(alertDiv, form);
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-error';
+            alertDiv.textContent = 'Erro de comunicação com o servidor.';
+            form.parentNode.insertBefore(alertDiv, form);
+            btn.disabled = false;
+            btn.textContent = originalText;
+        });
+}
+
+// ==========================================
+// Forgot Password Logic (index.php)
+// ==========================================
+function openResetModal() {
+    const modal = document.getElementById('resetModal');
+    if (!modal) return;
+
+    // Reset inputs and messages
+    document.getElementById('resetEmail').value = '';
+    document.getElementById('resetCode').value = '';
+    document.getElementById('resetNewPassword').value = '';
+    document.getElementById('resetMsg1').style.display = 'none';
+    document.getElementById('resetMsg2').style.display = 'none';
+    document.getElementById('resetMsg3').style.display = 'none';
+    document.getElementById('devTokenHint').style.display = 'none';
+
+    // Show only the first step
+    document.getElementById('resetStep1').style.display = 'block';
+    document.getElementById('resetStep2').style.display = 'none';
+    document.getElementById('resetStep3').style.display = 'none';
+    document.getElementById('resetModalTitle').innerText = 'Redefinir Senha';
+
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeResetModal() {
+    const modal = document.getElementById('resetModal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+}
+
+// Adiciona resetModal no fechamento global da janela clicando fora do modal
+window.addEventListener('click', function (event) {
+    const resetModal = document.getElementById('resetModal');
+    if (event.target == resetModal) closeResetModal();
+});
+
+function backToResetStep1() {
+    document.getElementById('resetStep2').style.display = 'none';
+    document.getElementById('resetStep1').style.display = 'block';
+}
+
+function requestResetCode() {
+    const email = document.getElementById('resetEmail').value.trim();
+    const msg = document.getElementById('resetMsg1');
+    const btn = document.querySelector('#resetStep1 .btn-primary');
+
+    if (!email) {
+        msg.className = 'alert alert-error';
+        msg.textContent = 'Digite seu e-mail.';
+        msg.style.display = 'block';
+        return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+    msg.style.display = 'none';
+
+    // Em uma aplicação real, você deve ajustar o path considerando a rota atual.
+    // Considerando que index.php está na raiz, a API está em 'api/forgot_password.php'
+    fetch('api/forgot_password.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                // Se for retornado um token de desenvolvimento (dev_token), mostra na tela
+                if (data.dev_token) {
+                    const hint = document.getElementById('devTokenHint');
+                    hint.textContent = `DEV MODE - Código Gerado: ${data.dev_token}`;
+                    hint.style.display = 'block';
+                    console.log(`[DEV MODE] Password Reset Code: ${data.dev_token}`);
+                }
+                // Avança para o Passo 2
+                document.getElementById('resetStep1').style.display = 'none';
+                document.getElementById('resetStep2').style.display = 'block';
+                document.getElementById('resetMsg2').className = 'alert alert-success';
+                document.getElementById('resetMsg2').textContent = 'Código enviado para ' + email;
+                document.getElementById('resetMsg2').style.display = 'block';
+            } else {
+                msg.className = 'alert alert-error';
+                msg.textContent = data.error || 'Erro ao solicitar código.';
+                msg.style.display = 'block';
+            }
+        })
+        .catch(err => {
+            msg.className = 'alert alert-error';
+            msg.textContent = 'Erro de conexão com o servidor.';
+            msg.style.display = 'block';
+        })
+        .finally(() => {
+            btn.disabled = false;
+            btn.textContent = 'Enviar Código';
+        });
+}
+
+function verifyResetCode() {
+    const email = document.getElementById('resetEmail').value.trim();
+    const code = document.getElementById('resetCode').value.trim();
+    const msg = document.getElementById('resetMsg2');
+    const btn = document.querySelector('#resetStep2 .btn-primary');
+
+    if (!code || code.length !== 6) {
+        msg.className = 'alert alert-error';
+        msg.textContent = 'Digite o código de 6 dígitos.';
+        msg.style.display = 'block';
+        return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Verificando...';
+
+    fetch('api/verify_reset_code.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code })
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                // Avança para o passo 3
+                document.getElementById('resetStep2').style.display = 'none';
+                document.getElementById('resetStep3').style.display = 'block';
+            } else {
+                msg.className = 'alert alert-error';
+                msg.textContent = data.error || 'Código inválido.';
+                msg.style.display = 'block';
+            }
+        })
+        .catch(err => {
+            msg.className = 'alert alert-error';
+            msg.textContent = 'Erro de conexão com o servidor.';
+            msg.style.display = 'block';
+        })
+        .finally(() => {
+            btn.disabled = false;
+            btn.textContent = 'Validar Código';
+        });
+}
+
+function resetPassword() {
+    const email = document.getElementById('resetEmail').value.trim();
+    const code = document.getElementById('resetCode').value.trim();
+    const newPassword = document.getElementById('resetNewPassword').value.trim();
+    const msg = document.getElementById('resetMsg3');
+    const btn = document.querySelector('#resetStep3 .btn-primary');
+
+    if (!newPassword || newPassword.length < 4) {
+        msg.className = 'alert alert-error';
+        msg.textContent = 'A senha deve ter pelo menos 4 caracteres.';
+        msg.style.display = 'block';
+        return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Salvando...';
+
+    fetch('api/reset_password.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code, new_password: newPassword })
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                msg.className = 'alert alert-success';
+                msg.textContent = 'Senha atualizada com sucesso! Você já pode fazer login.';
+                msg.style.display = 'block';
+                btn.style.display = 'none'; // ocultar botão
+
+                // Fecha após 3 segundos e auto-preenche o e-mail no login
+                setTimeout(() => {
+                    closeResetModal();
+                    document.getElementById('username').value = email;
+                    document.getElementById('password').focus();
+                }, 3000);
+            } else {
+                msg.className = 'alert alert-error';
+                msg.textContent = data.error || 'Erro ao salvar nova senha.';
+                msg.style.display = 'block';
+            }
+        })
+        .catch(err => {
+            msg.className = 'alert alert-error';
+            msg.textContent = 'Erro de conexão com o servidor.';
+            msg.style.display = 'block';
+        })
+        .finally(() => {
+            if (msg.className !== 'alert alert-success') {
+                btn.disabled = false;
+                btn.textContent = 'Salvar Nova Senha';
+            }
+        });
 }

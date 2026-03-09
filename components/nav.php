@@ -4,6 +4,16 @@ $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 <!-- Sidebar -->
 <aside class="sidebar">
+    <script>
+        // Inicialização crítica para evitar FOUC (pulo visual)
+        (function () {
+            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            if (isCollapsed) {
+                document.querySelector('.sidebar').classList.add('collapsed');
+                document.body.classList.add('sidebar-collapsed');
+            }
+        })();
+    </script>
     <div class="sidebar-header">
         <span class="sidebar-logo">SENAI</span>
         <button id="toggleSidebar" class="btn-toggle-sidebar" title="Recolher Menu">
@@ -260,5 +270,4 @@ $current_page = basename($_SERVER['PHP_SELF']);
 </div>
 
 <!-- Scripts Globais -->
-<link rel="stylesheet" href="../css/sidebar.css">
 <script src="../js/script.js"></script>

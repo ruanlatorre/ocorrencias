@@ -9,11 +9,12 @@ $is_modal = isset($_GET['modal']) && $_GET['modal'] == '1';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tabela de Alunos - SENAI</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <?php if (!$is_modal): ?>
-        <link rel="stylesheet" href="../css/header.css">
-    <?php else: ?>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="../css/main.css">
+    <?php if ($is_modal): ?>
         <style>
             body {
                 background-color: var(--bg-primary);
@@ -43,17 +44,18 @@ $is_modal = isset($_GET['modal']) && $_GET['modal'] == '1';
         <?php if (!$is_modal)
             include '../components/header.php'; ?>
 
+        <div class="search-container">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" width="18" height="18">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="tableSearch" placeholder="Pesquisar aluno por nome, matrícula ou curso...">
+        </div>
+
         <div class="table-container">
             <div class="table-header">
                 <h3>Lista de Alunos</h3>
-                <div class="search-bar">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" width="18" height="18">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                    <input type="text" id="tableSearch" placeholder="Pesquisar aluno...">
-                </div>
             </div>
 
             <table class="senai-table">

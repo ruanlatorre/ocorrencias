@@ -7,7 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $input = json_decode(file_get_contents('php://input'), true);
 
     // If not JSON, try $_POST
-    $username = trim($input['username'] ?? $_POST['username'] ?? '');
+    $username = trim($input['username'] ?? $_POST[' '] ?? '');
     $password = $input['password'] ?? $_POST['password'] ?? '';
 
     if (empty($username) || empty($password)) {
@@ -17,12 +17,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $conn = conexaoBanco();
-    $username_escaped = $conn->real_escape_string($username);
 
     // Procura apenas na tabela de colaborador (Professor/Gestor/Admin)
     $sql = 'SELECT * FROM colaborador WHERE email = ? OR nif = ?';
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param('ss', $username_escaped, $username_escaped);
+    $stmt->bind_param('ss', $username, $username);
 
     $stmt->execute();
     $result = $stmt->get_result();
@@ -32,6 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Verifica a senha
         if (password_verify($password, $user['senha'])) {
+            session_regenerate_id(true);
             $_SESSION['user_logado'] = true;
             $_SESSION['role'] = 'colaborador';
             $_SESSION['username'] = $user['nome'];

@@ -49,8 +49,7 @@ if ($stmt_update->execute()) {
     // Para ambientes de dev sem envio de e-mail, enviamos o código de simulação na resposta de sucesso
     echo json_encode([
         'success' => true,
-        'message' => 'Código gerado com sucesso.',
-        'dev_token' => $token // Apenas para testes visuais. Em produção isso não deveria ir na view
+        'message' => 'Código gerado com sucesso.'
     ]);
 } else {
     http_response_code(500);

@@ -55,13 +55,13 @@ switch ($method) {
             exit;
         }
 
-        $nome = $conn->real_escape_string($input['nome']);
-        $nif = $conn->real_escape_string($input['nif']);
-        $email = $conn->real_escape_string($input['email']);
+        $nome = $input['nome'];
+        $nif = $input['nif'];
+        $email = $input['email'];
         $senha = $input['senha']; // Not escaped before hashing
-        $setor = $conn->real_escape_string($input['setor']);
-        $status = isset($input['status']) ? $conn->real_escape_string($input['status']) : 'Ativo';
-        $permissao = isset($input['permissao']) ? $conn->real_escape_string($input['permissao']) : 'Usuario';
+        $setor = $input['setor'];
+        $status = isset($input['status']) ? $input['status'] : 'Ativo';
+        $permissao = isset($input['permissao']) ? $input['permissao'] : 'Usuario';
 
         $hashed_password = password_hash($senha, PASSWORD_DEFAULT);
         $ip_address = getAddressIP();

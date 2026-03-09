@@ -575,13 +575,6 @@ function requestResetCode() {
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                // Se for retornado um token de desenvolvimento (dev_token), mostra na tela
-                if (data.dev_token) {
-                    const hint = document.getElementById('devTokenHint');
-                    hint.textContent = `DEV MODE - Código Gerado: ${data.dev_token}`;
-                    hint.style.display = 'block';
-                    console.log(`[DEV MODE] Password Reset Code: ${data.dev_token}`);
-                }
                 // Avança para o Passo 2
                 document.getElementById('resetStep1').style.display = 'none';
                 document.getElementById('resetStep2').style.display = 'block';

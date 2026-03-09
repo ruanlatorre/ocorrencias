@@ -24,8 +24,10 @@ $result_colaboradores = $conn->query($sql_colaboradores);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerenciar Turmas - SENAI</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/header.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="../css/main.css">
 </head>
 
 <body>
@@ -75,7 +77,8 @@ $result_colaboradores = $conn->query($sql_colaboradores);
                 <div class="form-group">
                     <label for="curso_search">Curso</label>
                     <div class="autocomplete-wrapper">
-                        <input type="text" class="form-control" id="curso_search" placeholder="Digite o nome do curso..." required autocomplete="off">
+                        <input type="text" class="form-control" id="curso_search"
+                            placeholder="Digite o nome do curso..." required autocomplete="off">
                         <input type="hidden" id="curso_id" name="curso_id">
                         <div id="curso_results" class="autocomplete-results"></div>
                     </div>
@@ -84,7 +87,8 @@ $result_colaboradores = $conn->query($sql_colaboradores);
                 <div class="form-group">
                     <label for="colaborador_search">Colaborador (Responsável)</label>
                     <div class="autocomplete-wrapper">
-                        <input type="text" class="form-control" id="colaborador_search" placeholder="Digite o nome do responsável..." autocomplete="off">
+                        <input type="text" class="form-control" id="colaborador_search"
+                            placeholder="Digite o nome do responsável..." autocomplete="off">
                         <input type="hidden" id="colaborador_id" name="colaborador_id">
                         <div id="colaborador_results" class="autocomplete-results"></div>
                     </div>
